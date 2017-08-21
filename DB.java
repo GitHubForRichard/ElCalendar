@@ -28,17 +28,11 @@ public class DB
 					"'" + endTime + "'," +
 					"'" + description + "'," +
 					"'" + startTod + "'," +
-<<<<<<< HEAD
-					"'" + endTod + "'" +
-
-=======
 					"'" + endTod + "'," +
 					"'" + color + "'" +
->>>>>>> 5a83ffa54d2f778345508a9c6b522636cdb3e23d
 					 ")";
 			
 			instertStmt.executeUpdate(event);
-
 			System.out.println("event added");
 		}
 
@@ -54,7 +48,7 @@ public class DB
 		try{
 
 		 Connection myConn = DriverManager.getConnection(
-			    "jdbc:mysql://localhost:3306/calendar", "root", "chodo");
+			    "jdbc:mysql://localhost:3306/calendar", "root", "calendar");
 
 		 Statement myStmt = myConn.createStatement();
 
@@ -81,18 +75,18 @@ public class DB
 
 	public static ArrayList<Event> loadAll()
 	{
-
+		
 		ArrayList<Event> allEvents = null;
 
 		try{
 				//connect
 				Connection myConn = DriverManager.getConnection(
-					"jdbc:mysql://localhost:3306/calendar", "root", "chodo");
+					"jdbc:mysql://localhost:3306/calendar", "root", "calendar");
 			
 				//add
 				Statement loadAll = myConn.createStatement();
 
-				ResultSet myRs = loadAll.executeQuery("select * from events");
+				ResultSet myRs = loadAll.executeQuery("SELECT * FROM posts ORDER BY id DESC LIMIT 1;");
 					
 
 					allEvents = createEvents(myRs);
@@ -111,7 +105,7 @@ public class DB
 		try{
 		//connect
 		Connection myConn = DriverManager.getConnection(
-		      "jdbc:mysql://localhost:3306/calendar", "root", "chodo");
+		      "jdbc:mysql://localhost:3306/calendar", "root", "calendar");
 
 		Statement loadMonth = myConn.createStatement();
 
@@ -136,7 +130,7 @@ public class DB
 		try{
 		//connect
 		Connection myConn = DriverManager.getConnection(
-		      "jdbc:mysql://localhost:3306/calendar", "root", "chodo");
+		      "jdbc:mysql://localhost:3306/calendar", "root", "calendar");
 
 		Statement loadDay = myConn.createStatement();
 

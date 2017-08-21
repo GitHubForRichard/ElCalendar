@@ -8,14 +8,15 @@ import java.util.ArrayList;
 public class CalendarTester {
 public static void main(String[] args) 
 {
-	//CalendarView cv = new CalendarView();
-	//cv.themeFrame();
+	CalendarView cv = new CalendarView();
+	Model m = cv.getModel();
+	cv.themeFrame();
 	
-	ArrayList<Event> all = new ArrayList(DB.loadDay(2017, 6, 30));
-
-	for(int i = 0; i < all.size(); i++)
+	ArrayList<Event> all = new ArrayList(DB.loadAll());
+	
+	for(Event current : all)
 	{
-		System.out.println(all.get(i).toString());
+		m.addEvent(current.getYear(), current.getMonth(), current.getDay(), current.getStartTime(), current.getEndTime(), current.getDescription(), current.getStartTod(), current.getendTod(), current.getColor());
 	}
 	
 //	cv.paintDayView();

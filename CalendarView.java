@@ -782,7 +782,7 @@ public class CalendarView extends JFrame
 					dayButton.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 8, true));
 					dayLabel.setForeground(Color.WHITE);
 				}
-							
+				
 				int numOfAllEvents = m.getDaysArr().size();
 				int previewCount = 0;
 				if(numOfAllEvents > 0)
