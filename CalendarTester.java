@@ -16,6 +16,7 @@ public static void main(String[] args)
 	
 	for(Event current : all)
 	{
+		System.out.println(current.toString());
 		m.addEvent(current.getYear(), current.getMonth(), current.getDay(), current.getStartTime(), current.getEndTime(), current.getDescription(), current.getStartTod(), current.getendTod(), current.getColor());
 	}
 	

@@ -13,7 +13,7 @@ public class DB
 		try{
 
                Connection myConn = DriverManager.getConnection(
-			    "jdbc:mysql://localhost:3306/calendar", "root", "calendar");
+			    "jdbc:mysql://localhost:3306/calendar", "root", "chodo");
 
 		Statement instertStmt = myConn.createStatement();
 
@@ -48,7 +48,7 @@ public class DB
 		try{
 
 		 Connection myConn = DriverManager.getConnection(
-			    "jdbc:mysql://localhost:3306/calendar", "root", "calendar");
+			    "jdbc:mysql://localhost:3306/calendar", "root", "chodo");
 
 		 Statement myStmt = myConn.createStatement();
 
@@ -81,12 +81,12 @@ public class DB
 		try{
 				//connect
 				Connection myConn = DriverManager.getConnection(
-					"jdbc:mysql://localhost:3306/calendar", "root", "calendar");
+					"jdbc:mysql://localhost:3306/calendar", "root", "chodo");
 			
 				//add
 				Statement loadAll = myConn.createStatement();
 
-				ResultSet myRs = loadAll.executeQuery("SELECT * FROM posts ORDER BY id DESC LIMIT 1;");
+				ResultSet myRs = loadAll.executeQuery("SELECT * FROM events ORDER BY day DESC LIMIT 1;");
 					
 
 					allEvents = createEvents(myRs);
@@ -105,7 +105,7 @@ public class DB
 		try{
 		//connect
 		Connection myConn = DriverManager.getConnection(
-		      "jdbc:mysql://localhost:3306/calendar", "root", "calendar");
+		      "jdbc:mysql://localhost:3306/calendar", "root", "chodo");
 
 		Statement loadMonth = myConn.createStatement();
 
@@ -130,7 +130,7 @@ public class DB
 		try{
 		//connect
 		Connection myConn = DriverManager.getConnection(
-		      "jdbc:mysql://localhost:3306/calendar", "root", "calendar");
+		      "jdbc:mysql://localhost:3306/calendar", "root", "chodo");
 
 		Statement loadDay = myConn.createStatement();
 
