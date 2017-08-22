@@ -86,7 +86,7 @@ public class DB
 				//add
 				Statement loadAll = myConn.createStatement();
 
-				ResultSet myRs = loadAll.executeQuery("SELECT * FROM events ORDER BY day DESC LIMIT 1;");
+				ResultSet myRs = loadAll.executeQuery("SELECT * FROM events;");
 					
 
 					allEvents = createEvents(myRs);

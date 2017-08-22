@@ -19,14 +19,15 @@ public class CalendarView extends JFrame
 	private final Color[] colorList = {new Color(220,20,60), new Color(30,144,255), new Color(0,206,209), new Color(148,0,211), new Color(210,105,30)};
 	private String theme;
 	public boolean clickHighlighted;
+	public boolean allDay;
 	public CalendarView()
 	{
 		m = new Model();
-		m.addEvent(2017, 7, 4, 1200, 1145, "Independence Day", "A.M.", "P.M.", 0);
-		m.addEvent(2017, 11, 5, 1200, 1145, "Day Light Saving Ends", "A.M.", "P.M.", 0);
-		m.addEvent(2017, 11, 23, 1200, 1145, "Thanksgiving", "A.M.", "P.M.", 0);
-		m.addEvent(2017, 12, 25, 1200, 1145, "Christmas", "A.M.", "P.M.", 0);
-		m.addEvent(2018, 1, 1, 1200, 1145, "New Year", "A.M.", "P.M.", 0);
+		// m.addEvent(2017, 7, 4, 1200, 1145, "Independence Day", "A.M.", "P.M.", 0);
+		// m.addEvent(2017, 11, 5, 1200, 1145, "Day Light Saving Ends", "A.M.", "P.M.", 0);
+		// m.addEvent(2017, 11, 23, 1200, 1145, "Thanksgiving", "A.M.", "P.M.", 0);
+		// m.addEvent(2017, 12, 25, 1200, 1145, "Christmas", "A.M.", "P.M.", 0);
+		// m.addEvent(2018, 1, 1, 1200, 1145, "New Year", "A.M.", "P.M.", 0);
 		
 		calendarFrame = new JFrame("Calendar");
 		Dimension DimMax = Toolkit.getDefaultToolkit().getScreenSize();
@@ -162,8 +163,18 @@ public class CalendarView extends JFrame
 		});
 		
 		// Create tabs that are functional and useful for users in day view, including create, switching back to month view and switching back to today's date
-		//below is implementation of today
 		
+		// below is implementation for create
+		JButton createButton = beautifyButton("Create", "/img/create.png");
+		createButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				createEventBox();
+			}
+		});
+
+		//below is implementation of today
 		JButton todayButton = beautifyButton("Today", "/img/today.png");
 		Dimension d = new Dimension(150,40);
 		todayButton.setPreferredSize(d);
@@ -176,20 +187,7 @@ public class CalendarView extends JFrame
 				paintDayView();
 			}
 		});
-		
-		// below is implementation for create
-		JButton createButton = beautifyButton("Create", "/img/create.png");
-		createButton.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				createEventBox();
-			}
-		});
-				
 	
-
-		
 		//below is implementation for switching to month view
 		JButton monthView = beautifyButton("Month", "/img/monthView.png");
 		monthView.setPreferredSize(d);
@@ -209,9 +207,9 @@ public class CalendarView extends JFrame
 		// menuPanel holds lastAndNextPanel and buttonPanel
 		lastAndNextPanel.add(lastDayButton);
 		lastAndNextPanel.add(nextDayButton);
+		buttonPanel.add(createButton);
 		buttonPanel.add(todayButton);
 		buttonPanel.add(monthView);
-		buttonPanel.add(createButton);
 		
 		menuPanel.setOpaque(false);
 
@@ -278,7 +276,7 @@ public class CalendarView extends JFrame
 						Event currentEvent =  m.getDaysArr().get(i).getEventsArr().get(j);
 						String desc = currentEvent.getDescription();
 						String strTime = currentEvent.getStrTime();
-						if(strTime.equals("12:00 A.M.  -  11:45 P.M."))
+						if(allDay)
 							strTime = "All Day";
 						Color color = colorList[currentEvent.getColor()];
 						Block block = new Block(false,0,40,1000,200,desc, strTime, color);
@@ -340,6 +338,7 @@ public class CalendarView extends JFrame
 							public void actionPerformed(ActionEvent arg0) 
 							{
 								currentDay.getEventsArr().remove(currentEvent);
+								DB.delete(currentEvent);
 								calendarFrame.getContentPane().removeAll();
 								paintDayView();
 							}						
@@ -413,6 +412,7 @@ public class CalendarView extends JFrame
 		agenda.setRowHeight(60);
 
 		// Go through every event in model and print out every event in order of its date, time and name.
+		m.allEvents();
 		if(m.getDaysArr().size() > 0)
 		{
 			for(int i = 0; i < m.getDaysArr().size(); i++)
@@ -436,8 +436,8 @@ public class CalendarView extends JFrame
 					else
 						time = testEvent.getStartTime()/100 + ":" +testEvent.getStartTime() % 100 + " " + testEvent.getStartTod() + " - " + testEvent.getEndTime() + " " + testEvent.getendTod();
 					
-					if(time.equals("12:00 A.M. - 11:45 P.M."))
-							time = "All Day";
+					if(allDay)
+						time = "All Day";
 					
 					//Create a new row with new data
 					row[0] = testEvent.getStrDate();
@@ -779,7 +779,7 @@ public class CalendarView extends JFrame
 				// When today's date is clicked, it won't do anything
 				if(dayClicked && !isToday)
 				{
-					dayButton.setBorder(BorderFactory.createLineBorder(Color.YELLOW, 8, true));
+					dayButton.setBorder(BorderFactory.createLineBorder(Color.GRAY, 5, true));
 					dayLabel.setForeground(Color.WHITE);
 				}
 				
@@ -981,6 +981,8 @@ public class CalendarView extends JFrame
 				startTimePM.setEnabled(!allDayCheck.isSelected());
 				endTimeAM.setEnabled(!allDayCheck.isSelected());
 				endTimePM.setEnabled(!allDayCheck.isSelected());
+				allDay = true;
+
 			}		
 		});
 		
@@ -1031,23 +1033,23 @@ public class CalendarView extends JFrame
 				boolean startLaterThanEnd = false;
 				
 				//Check if start time is later than end time
-				int compareStartTime = 0;
-				int compareEndTime = 0;
-				compareStartTime = intStartTime;
-				compareEndTime = intEndTime;
-				if(startTod.equals("A.M."))
-					if(compareStartTime >= 1200)
+
+				if(!allDay)
+				{
+					int compareStartTime = 0;
+					int compareEndTime = 0;
+					compareStartTime = intStartTime;
+					compareEndTime = intEndTime;
+					if(startTod.equals("A.M.") && compareStartTime - 1200 < 100)
 						compareStartTime = compareStartTime - 1200;
-				if(endTod.equals("A.M."))
-					if(compareEndTime >= 1200)
-						compareEndTime = compareEndTime - 1200;
-				if(startTod.equals("P.M."))
-					if(compareStartTime < 1200)
+					if(startTod.equals("P.M.") && compareStartTime / 100 != 12)
 						compareStartTime = compareStartTime + 1200;
-				if(endTod.equals("P.M."))
-					if(compareEndTime < 1200)
+					if(endTod.equals("A.M.") && compareEndTime - 1200 < 100)
+						compareEndTime = compareEndTime - 1200;
+					if(endTod.equals("P.M.") && compareEndTime / 100 != 12)
 						compareEndTime = compareEndTime + 1200;
-				startLaterThanEnd = compareStartTime - compareEndTime > 0;
+					startLaterThanEnd = compareStartTime - compareEndTime > 0;
+				}
 				
 				//check if there is any error like leaving description blank or didn't choose between AM and PM for start time or end time
 				if(blankDesc || wrongStartTimeInput || wrongEndTimeInput || startLaterThanEnd)
@@ -1289,9 +1291,11 @@ public class CalendarView extends JFrame
 				startTimePM.setEnabled(!allDayCheck.isSelected());
 				endTimeAM.setEnabled(!allDayCheck.isSelected());
 				endTimePM.setEnabled(!allDayCheck.isSelected());
+				allDay = true;
 			}		
 		});
-		
+		if(!allDayCheck.isSelected())
+			allDay = false;
 		
 		//  add components in color area and put it below end date section
 		colorPanel.add(colorLabel);
@@ -1350,23 +1354,22 @@ public class CalendarView extends JFrame
 				boolean startLaterThanEnd = false;
 				
 				//Check if start time is later than end time
-				int compareStartTime = 0;
-				int compareEndTime = 0;
-				compareStartTime = intStartTime;
-				compareEndTime = intEndTime;
-				if(startTod.equals("A.M."))
-					if(compareStartTime >= 1200)
+				if(!allDay)
+				{
+					int compareStartTime = 0;
+					int compareEndTime = 0;
+					compareStartTime = intStartTime;
+					compareEndTime = intEndTime;
+					if(startTod.equals("A.M.") && compareStartTime - 1200 < 100)
 						compareStartTime = compareStartTime - 1200;
-				if(endTod.equals("A.M."))
-					if(compareEndTime >= 1200)
-						compareEndTime = compareEndTime - 1200;
-				if(startTod.equals("P.M."))
-					if(compareStartTime < 1200)
+					if(startTod.equals("P.M.") && compareStartTime / 100 != 12)
 						compareStartTime = compareStartTime + 1200;
-				if(endTod.equals("P.M."))
-					if(compareEndTime < 1200)
+					if(endTod.equals("A.M.") && compareEndTime - 1200 < 100)
+						compareEndTime = compareEndTime - 1200;
+					if(endTod.equals("P.M.") && compareEndTime / 100 != 12)
 						compareEndTime = compareEndTime + 1200;
-				startLaterThanEnd = compareStartTime - compareEndTime > 0;
+					startLaterThanEnd = compareStartTime - compareEndTime > 0;
+				}
 				
 				//check if there is any error like leaving description blank or didn't choose between AM and PM for start time or end time
 				if(blankDesc || wrongStartTimeInput || wrongEndTimeInput || startLaterThanEnd)
