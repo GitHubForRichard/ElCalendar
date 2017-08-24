@@ -276,7 +276,8 @@ public class CalendarView extends JFrame
 						Event currentEvent =  m.getDaysArr().get(i).getEventsArr().get(j);
 						String desc = currentEvent.getDescription();
 						String strTime = currentEvent.getStrTime();
-						if(allDay)
+						boolean isAllDayEvent = currentEvent.getStartTime() == 1200 && currentEvent.getStartTod().equals("A.M.") && currentEvent.getEndTime() == 1159 && currentEvent.getEndTod().equals("P.M.");
+						if(isAllDayEvent)
 							strTime = "All Day";
 						Color color = colorList[currentEvent.getColor()];
 						Block block = new Block(false,0,40,1000,200,desc, strTime, color);
@@ -324,7 +325,8 @@ public class CalendarView extends JFrame
 						Event currentEvent =  currentDay.getEventsArr().get(j);
 						String desc = currentEvent.getDescription();
 						String strTime = currentEvent.getStrTime();
-						if(strTime.equals("12:00 A.M.  -  11:45 P.M."))
+						boolean isAllDayEvent = currentEvent.getStartTime() == 1200 && currentEvent.getStartTod().equals("A.M.") && currentEvent.getEndTime() == 1159 && currentEvent.getEndTod().equals("P.M.");
+						if(isAllDayEvent)
 							strTime = "All Day";
 						Color color = colorList[currentEvent.getColor()];
 						Block block = new Block(true,0,40,1000,200,desc, strTime, color);
@@ -428,15 +430,17 @@ public class CalendarView extends JFrame
 					//Converting from int time to String time
 					// Checking if there is time end with :00
 					if(startMinute.equals("0") && endMinute.equals("0"))
-						time = testEvent.getStartTime()/100 + ":" +testEvent.getStartTime() % 100 + "0 " + testEvent.getStartTod() + " - " + testEvent.getEndTime()/100 + ":" + testEvent.getEndTime() % 100 + "0 " + testEvent.getendTod();
+						time = testEvent.getStartTime()/100 + ":" +testEvent.getStartTime() % 100 + "0 " + testEvent.getStartTod() + " - " + testEvent.getEndTime()/100 + ":" + testEvent.getEndTime() % 100 + "0 " + testEvent.getEndTod();
 					else if(startMinute.equals("0") && !endMinute.equals("0"))
-						time = testEvent.getStartTime()/100 + ":" +testEvent.getStartTime() % 100 + "0 " + testEvent.getStartTod() + " - " + testEvent.getEndTime()/100 + ":" + testEvent.getEndTime() % 100 + " " + testEvent.getendTod();
+						time = testEvent.getStartTime()/100 + ":" +testEvent.getStartTime() % 100 + "0 " + testEvent.getStartTod() + " - " + testEvent.getEndTime()/100 + ":" + testEvent.getEndTime() % 100 + " " + testEvent.getEndTod();
 					else if(!startMinute.equals("0") && !endMinute.equals("0"))
-						time = testEvent.getStartTime()/100 + ":" +testEvent.getStartTime() % 100 + testEvent.getStartTod() + " - " + testEvent.getEndTime()/100 + ":" + testEvent.getEndTime() % 100 + "0 " + testEvent.getendTod();
+						time = testEvent.getStartTime()/100 + ":" +testEvent.getStartTime() % 100 + testEvent.getStartTod() + " - " + testEvent.getEndTime()/100 + ":" + testEvent.getEndTime() % 100 + "0 " + testEvent.getEndTod();
 					else
-						time = testEvent.getStartTime()/100 + ":" +testEvent.getStartTime() % 100 + " " + testEvent.getStartTod() + " - " + testEvent.getEndTime() + " " + testEvent.getendTod();
+						time = testEvent.getStartTime()/100 + ":" +testEvent.getStartTime() % 100 + " " + testEvent.getStartTod() + " - " + testEvent.getEndTime() + " " + testEvent.getEndTod();
 					
-					if(allDay)
+
+					boolean isAllDayEvent = testEvent.getStartTime() == 1200 && testEvent.getStartTod().equals("A.M.") && testEvent.getEndTime() == 1159 && testEvent.getEndTod().equals("P.M.");
+					if(isAllDayEvent)
 						time = "All Day";
 					
 					//Create a new row with new data
@@ -1032,8 +1036,7 @@ public class CalendarView extends JFrame
 				boolean wrongEndTimeInput = !endTimeAM.isSelected() && !endTimePM.isSelected() && !allDayCheck.isSelected();
 				boolean startLaterThanEnd = false;
 				
-				//Check if start time is later than end time
-
+				//Check if start time is later than end time when users don't select all day 
 				if(!allDay)
 				{
 					int compareStartTime = 0;
@@ -1049,6 +1052,15 @@ public class CalendarView extends JFrame
 					if(endTod.equals("P.M.") && compareEndTime / 100 != 12)
 						compareEndTime = compareEndTime + 1200;
 					startLaterThanEnd = compareStartTime - compareEndTime > 0;
+				}
+
+				//if users select all day check box
+				else
+				{
+					intStartTime = 1200;
+					intEndTime = 1159;
+					startTod = "A.M.";
+					endTod = "P.M.";
 				}
 				
 				//check if there is any error like leaving description blank or didn't choose between AM and PM for start time or end time
@@ -1106,9 +1118,6 @@ public class CalendarView extends JFrame
 					return;
 				}		
 
-				
-
-	
 				m.addEvent(year, intMonth, day, intStartTime,intEndTime, 
 					description, startTod, endTod, color);
 

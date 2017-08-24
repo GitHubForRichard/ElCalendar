@@ -13,11 +13,11 @@ public static void main(String[] args)
 	cv.themeFrame();
 	
 	ArrayList<Event> all = new ArrayList(DB.loadAll());
-	
+	System.out.println("You have " + all.size() + " events.");
 	for(Event current : all)
 	{
 		System.out.println(current.toString());
-		m.addEvent(current.getYear(), current.getMonth(), current.getDay(), current.getStartTime(), current.getEndTime(), current.getDescription(), current.getStartTod(), current.getendTod(), current.getColor());
+		m.addEvent(current.getYear(), current.getMonth(), current.getDay(), current.getStartTime(), current.getEndTime(), current.getDescription(), current.getStartTod(), current.getEndTod(), current.getColor());
 	}
 	
 //	cv.paintDayView();

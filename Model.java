@@ -158,9 +158,9 @@ public class Model
 		for(int i = 0; i < dayCount; i++)
 		{
 			usedDays.get(i).returnEventList();
-			System.out.println("Day: " + usedDays.get(i).getDay());
-			System.out.println("Month: " + usedDays.get(i).getMonth());
-			System.out.println("Year: " + usedDays.get(i).getYear());
+			// System.out.println("Day: " + usedDays.get(i).getDay());
+			// System.out.println("Month: " + usedDays.get(i).getMonth());
+			// System.out.println("Year: " + usedDays.get(i).getYear());
 
 		}
 	}

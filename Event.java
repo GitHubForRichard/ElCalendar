@@ -165,7 +165,7 @@ public class Event implements Comparable<Event>
     	this.startTod = tod;
     }
 
-    public String getendTod()
+    public String getEndTod()
     {
     	return endTod;
     }
