@@ -1,1 +1,0 @@
-GUI application used to show a full calendar and plan events to be shown on calendar. Java program is synced with MySQL using JDBC. Main purpose was to get more practice with swing, learn learn how to use JDBC. 
