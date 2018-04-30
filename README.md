@@ -16,4 +16,4 @@
 ## Guide
   - Download all the files from the repository
   - run ```javac *.java``` to compile
-  - run ```java CalendarTest.java``` to start the program
+  - run ```java CalendarTest``` to start the program
